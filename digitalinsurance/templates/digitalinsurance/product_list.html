@@ -1,0 +1,97 @@
+{% extends "digitalbase.html" %}
+{% load group_tags %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-6 py-10 text-center">
+
+  <h1 class="text-4xl font-extrabold text-[var(--primary-color)] mb-6">
+    Explore Our Insurance Products
+  </h1>
+  <p class="text-gray-600 max-w-2xl mx-auto mb-12 text-lg">
+    Choose the right protection for your journey, vehicle, or future.
+  </p>
+
+  {# Add Product button only if NOT admin #}
+  {% if not request.user|in_group:"Admin" %}
+  <div class="mb-8 text-right max-w-7xl mx-auto px-6">
+    <a href="{% url 'digitalinsurance:product_create' %}"
+       class="inline-block bg-[var(--primary-color)] text-white px-6 py-2 rounded-full font-semibold hover:bg-[#563d7c] transition">
+      + Add Product
+    </a>
+  </div>
+  {% endif %}
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+    {% for product in products %}
+      <article class="p-8 bg-white rounded-3xl shadow-lg hover:shadow-xl transition border-t-4
+        {% if product.code == '01' %}border-blue-500
+        {% elif product.code == '02' %}border-green-500
+        {% else %}border-red-500
+        {% endif %}">
+
+        <div class="mb-4
+          {% if product.code == '01' %}text-blue-500 icon-bounce-blue
+          {% elif product.code == '02' %}text-green-500 icon-bounce-green
+          {% else %}text-red-500 icon-bounce-red
+          {% endif %}">
+
+          {% if product.code == '01' %}
+            {# Travel Insurance Icon #}
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 12c2.21 0 4-1.79 4-4S14.21 4 12 4 8 5.79 8 8s1.79 4 4 4z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 12v8m0 0a9 9 0 100-18 9 9 0 000 18z"/>
+            </svg>
+          {% elif product.code == '02' %}
+            {# Motor Insurance Icon #}
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13l2-3h13l2 3"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 16h14l1 4H4l1-4z"/>
+              <circle cx="7.5" cy="18.5" r="1.5"/>
+              <circle cx="16.5" cy="18.5" r="1.5"/>
+            </svg>
+          {% else %}
+            {# Personal Accident Icon #}
+            <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/>
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+            </svg>
+          {% endif %}
+        </div>
+
+        <h3 class="text-xl font-semibold mb-2
+          {% if product.code == '01' %}text-blue-500
+          {% elif product.code == '02' %}text-green-500
+          {% else %}text-red-500
+          {% endif %}">
+          {{ product.name }}
+        </h3>
+
+        <p class="text-gray-600 mb-6">{{ product.description|truncatechars:110 }}</p>
+
+        <a href="{% url 'digitalinsurance:product_detail' code=product.code %}"
+           class="inline-flex items-center justify-center px-5 py-2 rounded-full font-semibold text-white transition
+           {% if product.code == '01' %}bg-blue-500 hover:bg-blue-600
+           {% elif product.code == '02' %}bg-green-500 hover:bg-green-600
+           {% else %}bg-red-500 hover:bg-red-600
+           {% endif %}">
+          Check our Prices
+        </a>
+
+        {% if not request.user|in_group:"Customer" %}
+          <div class="mt-4 flex justify-center space-x-2">
+            <a href="{% url 'digitalinsurance:product_update' product.pk %}" class="bg-yellow-400 hover:bg-yellow-500 text-white text-sm px-3 py-1 rounded">
+              Edit
+            </a>
+            <a href="{% url 'digitalinsurance:product_delete' product.pk %}" class="bg-red-500 hover:bg-red-600 text-white text-sm px-3 py-1 rounded">
+              Delete
+            </a>
+          </div>
+        {% endif %}
+      </article>
+    {% endfor %}
+
+  </div>
+</div>
+{% endblock %}

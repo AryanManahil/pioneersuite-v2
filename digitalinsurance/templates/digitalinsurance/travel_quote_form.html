@@ -1,0 +1,117 @@
+{% extends "digitalbase.html" %}
+{% block content %}
+<div class="max-w-xl mx-auto mt-12 p-6 bg-white rounded-2xl shadow-lg text-sm">
+
+  <h2 class="text-2xl font-bold text-blue-700 mb-2">Get a Travel Insurance Quote</h2>
+  <p class="text-gray-600 mb-6">Plan: <strong>{{ plan.name }}</strong> — {{ plan.region }}</p>
+
+  {% if error %}
+    <div class="mb-6 p-3 text-sm text-red-800 bg-red-100 border border-red-200 rounded-lg">
+      ⚠️ {{ error }}
+    </div>
+  {% endif %}
+
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+
+    <!-- Country Selection -->
+    <div>
+      <label for="countries" class="block font-medium text-gray-700 mb-1">Travel Country/Countries</label>
+      <select name="countries" id="countries" multiple required
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm h-48">
+        {% comment "List at least 50 countries" %}
+        {% for country in countries %}
+          <option value="{{ country }}">{{ country }}</option>
+        {% endfor %}
+        {% endcomment %}
+
+        <option value="USA">USA</option>
+        <option value="UK">UK</option>
+        <option value="Canada">Canada</option>
+        <option value="Germany">Germany</option>
+        <option value="France">France</option>
+        <option value="Australia">Australia</option>
+        <option value="Italy">Italy</option>
+        <option value="Spain">Spain</option>
+        <option value="Japan">Japan</option>
+        <option value="China">China</option>
+        <option value="India">India</option>
+        <option value="Netherlands">Netherlands</option>
+        <option value="Switzerland">Switzerland</option>
+        <option value="Sweden">Sweden</option>
+        <option value="Norway">Norway</option>
+        <option value="Belgium">Belgium</option>
+        <option value="Austria">Austria</option>
+        <option value="Brazil">Brazil</option>
+        <option value="Argentina">Argentina</option>
+        <option value="South Africa">South Africa</option>
+        <option value="Mexico">Mexico</option>
+        <option value="Thailand">Thailand</option>
+        <option value="Malaysia">Malaysia</option>
+        <option value="Singapore">Singapore</option>
+        <option value="New Zealand">New Zealand</option>
+        <option value="Russia">Russia</option>
+        <option value="Turkey">Turkey</option>
+        <option value="UAE">UAE</option>
+        <option value="Saudi Arabia">Saudi Arabia</option>
+        <option value="Bangladesh">Bangladesh</option>
+        <option value="Pakistan">Pakistan</option>
+        <option value="Sri Lanka">Sri Lanka</option>
+        <option value="Philippines">Philippines</option>
+        <option value="Vietnam">Vietnam</option>
+        <option value="Indonesia">Indonesia</option>
+        <option value="South Korea">South Korea</option>
+        <option value="Ireland">Ireland</option>
+        <option value="Czech Republic">Czech Republic</option>
+        <option value="Poland">Poland</option>
+        <option value="Finland">Finland</option>
+        <option value="Denmark">Denmark</option>
+        <option value="Hungary">Hungary</option>
+        <option value="Greece">Greece</option>
+        <option value="Israel">Israel</option>
+        <option value="Qatar">Qatar</option>
+        <option value="Kuwait">Kuwait</option>
+        <option value="Jordan">Jordan</option>
+        <option value="Egypt">Egypt</option>
+        <option value="Morocco">Morocco</option>
+        <option value="Kenya">Kenya</option>
+      </select>
+      <p class="text-xs text-gray-400 mt-1">Hold Ctrl (Windows) or Cmd (Mac) to select multiple countries.</p>
+    </div>
+
+    <!-- DOB -->
+    <div>
+      <label for="dob" class="block font-medium text-gray-700 mb-1">Date of Birth</label>
+      <input type="date" name="dob" id="dob" max="{{ today }}" required
+             class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm">
+    </div>
+
+    <!-- Departure Date -->
+    <div>
+      <label for="departure_date" class="block font-medium text-gray-700 mb-1">Departure Date</label>
+      <input type="date" name="departure_date" id="departure_date" min="{{ today }}" required
+             class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm">
+    </div>
+
+    <!-- Coverage Period -->
+    <div>
+      <label for="coverage_period" class="block font-medium text-gray-700 mb-1">Coverage Period</label>
+      <select name="coverage_period" id="coverage_period" required
+              class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 text-sm">
+        <option value="">Select duration</option>
+        {% for band in duration_bands %}
+          <option value="{{ band.id }}">{{ band.label }} ({{ band.min_days }}–{{ band.max_days }} days)</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Submit -->
+    <div class="pt-3">
+      <button type="submit"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md shadow-sm transition">
+        Get Quote
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

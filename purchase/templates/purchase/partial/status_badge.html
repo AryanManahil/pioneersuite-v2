@@ -1,0 +1,12 @@
+{% comment "Usage: {% include 'partials/status_badge.html' with status=order.status %}" %}
+{% if status == "draft" %}
+<span class="inline-block px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-full">Draft</span>
+{% elif status == "submitted" %}
+<span class="inline-block px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">Submitted</span>
+{% elif status == "approved" %}
+<span class="inline-block px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Approved</span>
+{% elif status == "rejected" %}
+<span class="inline-block px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">Rejected</span>
+{% else %}
+<span class="inline-block px-2 py-1 text-xs font-semibold text-gray-600 bg-gray-100 rounded-full">Unknown</span>
+{% endif %}

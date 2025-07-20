@@ -1,0 +1,36 @@
+{% extends "digitalbase.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto mt-12 bg-white shadow p-6 rounded-xl text-sm">
+  <h2 class="text-2xl font-bold text-blue-700 mb-6">My Claims</h2>
+
+  {% if claims %}
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-gray-100 text-sm uppercase text-gray-600">
+          <th class="p-2">Claim ID</th>
+          <th class="p-2">Date Filed</th>
+          <th class="p-2">Status</th>
+          <th class="p-2">Amount</th>
+          <th class="p-2">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for claim in claims %}
+        <tr class="border-t text-sm">
+          <td class="p-2 font-medium">{{ claim.id }}</td>
+          <td class="p-2">{{ claim.date_filed }}</td>
+          <td class="p-2">{{ claim.status }}</td>
+          <td class="p-2">{{ claim.amount }}</td>
+          <td class="p-2">
+            <!-- Link to detail if available -->
+            <a href="#" class="text-blue-600 hover:underline">View</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>You don't have any claims yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

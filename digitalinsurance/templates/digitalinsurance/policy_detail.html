@@ -1,0 +1,25 @@
+{% extends "digitalbase.html" %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-12 p-6 bg-white rounded-xl shadow text-sm text-gray-800">
+
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold text-green-700">✅ Policy Details</h2>
+    <span class="text-xs bg-green-100 text-green-800 font-semibold px-3 py-1 rounded-full">PAID</span>
+  </div>
+
+  <p><strong>Policy Number:</strong> {{ policy.policy_number }}</p>
+  <p><strong>Product:</strong> {{ policy.product.name }}</p>
+  <p><strong>Status:</strong>
+    {% if policy.status == 'ACTIVE' %}
+      <span class="text-green-700 font-semibold">ACTIVE</span>
+    {% else %}
+      {{ policy.status }}
+    {% endif %}
+  </p>
+  <p><strong>Start Date:</strong> {{ policy.start_date|date:"F j, Y" }}</p>
+  <p><strong>End Date:</strong> {{ policy.end_date|date:"F j, Y" }}</p>
+  <p><strong>Premium:</strong> {{ policy.premium_amount }} BDT</p>
+
+</div>
+{% endblock %}

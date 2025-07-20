@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Requisition List - PioneerSuite{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-2xl font-bold text-center text-blue-700 mb-8">Requisition</h1>
+        <a href="{% url 'purchase:create_requisition' %}"
+           class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg shadow font-medium transition">
+            + Create Requisition
+        </a>
+    </div>
+
+    <!-- Requisition Cards -->
+    {% if page_obj %}
+        <div class="space-y-6">
+            {% for requisition in page_obj %}
+                <div class="bg-white border-l-4 border-blue-500 shadow-md rounded-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-800">
+                        <div><strong>Requisition No:</strong> {{ requisition.requisition_no }}</div>
+                        <div><strong>Date:</strong> {{ requisition.requisition_date|date:"M d, Y" }}</div>
+                        <div><strong>Department:</strong> {{ requisition.requisition_department.name }}</div>
+                        <div>
+                            <strong>Status:</strong>
+                            {% if requisition.status == "PENDING" %}
+                                <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-semibold">Pending</span>
+                            {% elif requisition.status == "APPROVED" %}
+                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">Approved</span>
+                            {% elif requisition.status == "REJECTED" %}
+                                <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-xs font-semibold">Rejected</span>
+                            {% else %}
+                                <span class="bg-gray-200 text-gray-800 px-3 py-1 rounded-full text-xs font-semibold">
+                                    {{ requisition.get_status_display }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="mt-4 flex flex-wrap justify-end items-center gap-2">
+                        <a href="{% url 'purchase:requisition_detail' requisition.pk %}"
+                           class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded text-xs font-medium transition">
+                            Details
+                        </a>
+
+                        {% if requisition.status == "PENDING" and perms.purchase.can_approve_requisition %}
+                        <form action="{% url 'purchase:approve_requisition' requisition.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="approve">
+                            <button type="submit"
+                                    class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-medium transition">
+                                Approve
+                            </button>
+                        </form>
+                        <form action="{% url 'purchase:approve_requisition' requisition.id %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="reject">
+                            <button type="submit"
+                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-medium transition">
+                                Reject
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-8 flex justify-center">
+            <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}"
+                       class="px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 rounded-l-md">
+                        Previous
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 border border-gray-300 text-gray-400 bg-gray-100 rounded-l-md cursor-not-allowed">
+                        Previous
+                    </span>
+                {% endif %}
+
+                <span class="px-4 py-2 border-t border-b border-gray-300 bg-white text-gray-700">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}"
+                       class="px-4 py-2 border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 rounded-r-md">
+                        Next
+                    </a>
+                {% else %}
+                    <span class="px-4 py-2 border border-gray-300 text-gray-400 bg-gray-100 rounded-r-md cursor-not-allowed">
+                        Next
+                    </span>
+                {% endif %}
+            </nav>
+        </div>
+    {% else %}
+        <p class="text-center text-gray-600 mt-10">No requisitions found.</p>
+    {% endif %}
+</div>
+{% endblock %}

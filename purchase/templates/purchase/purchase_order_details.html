@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load math_filters %}
+
+{% block title %}Purchase Order Details - PioneerSuite{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold text-center text-blue-700 mb-6">Purchase Order</h1>
+
+    <!-- Summary -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6 border-t-4 border-blue-400">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm text-gray-800 mb-4">
+            <div><strong>PO Number:</strong> {{ purchase_order.po_number }}</div>
+            <div><strong>Requisition No:</strong> {{ purchase_order.requisition.requisition_no }}</div>
+            <div><strong>Vendor:</strong> {{ purchase_order.vendor.name }}</div>
+            <div><strong>Order Date:</strong> {{ purchase_order.order_date|date:"M d, Y" }}</div>
+            <div><strong>Status:</strong>
+                <span class="font-semibold {% if purchase_order.status == 'completed' %}text-green-700{% elif purchase_order.status == 'sent' %}text-yellow-700{% else %}text-red-600{% endif %}">
+                    {{ purchase_order.get_status_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {% if purchase_order.items.all %}
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Order Items</h2>
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm bg-gray-50 rounded shadow-sm mb-6">
+            <thead class="bg-purple-200 text-gray-800">
+                <tr>
+                    <th class="py-2 px-3 text-left">#</th>
+                    <th class="py-2 px-3 text-left">Item Name</th>
+                    <th class="py-2 px-3 text-left">Quantity</th>
+                    <th class="py-2 px-3 text-left">Unit</th>
+                    <th class="py-2 px-3 text-left">Unit Price</th>
+                    <th class="py-2 px-3 text-left">Total</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-300">
+                {% for item in purchase_order.items.all %}
+                <tr>
+                    <td class="py-2 px-3">{{ forloop.counter }}</td>
+                    <td class="py-2 px-3">{{ item.item_name }}</td>
+                    <td class="py-2 px-3">{{ item.quantity }}</td>
+                    <td class="py-2 px-3">{{ item.unit }}</td>
+                    <td class="py-2 px-3">৳ {{ item.price|floatformat:2 }}</td>
+                    <td class="py-2 px-3">৳ {{ item.quantity|multiply:item.price|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+                <!-- Grand total row -->
+                <tr class="bg-gray-100 font-semibold text-right">
+                    <td colspan="5" class="py-2 px-3 text-right">Grand Total:</td>
+                    <td class="py-2 px-3 text-left">৳ {{ grand_total|floatformat:2 }}</td>
+                </tr>
+                <tr class="text-right">
+                    <td colspan="5" class="py-2 px-3 text-right">VAT ({{ vat_percent }}%):</td>
+                    <td class="py-2 px-3 text-left">৳ {{ vat_amount|floatformat:2 }}</td>
+                </tr>
+                <tr class="text-right">
+                    <td colspan="5" class="py-2 px-3 text-right">Discount:</td>
+                    <td class="py-2 px-3 text-left">৳ {{ discount|floatformat:2 }}</td>
+                </tr>
+                <tr class="bg-green-100 font-bold text-right">
+                    <td colspan="5" class="py-2 px-3 text-right">Net Payable:</td>
+                    <td class="py-2 px-3 text-left">৳ {{ net_payable|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Amount in words -->
+    <div class="text-gray-600 italic text-right mb-4">
+        Amount in words: <span class="font-semibold">{{ amount_in_words }}</span>
+    </div>
+
+    {% else %}
+    <p class="text-gray-500 italic text-center">No items found in this purchase order.</p>
+    {% endif %}
+
+    <div class="text-center mt-4">
+    <a href="{% url 'purchase:purchase_order_pdf' purchase_order.id %}" target="_blank"
+       class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
+        🧾 Convert to PDF
+    </a>
+</div>
+
+
+    <div class="text-center mt-8">
+        <a href="{% url 'purchase:purchase_requisition_list' %}" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition">
+            ⬅️ Back to Purchase Orders
+        </a>
+    </div>
+</div>
+{% endblock %}

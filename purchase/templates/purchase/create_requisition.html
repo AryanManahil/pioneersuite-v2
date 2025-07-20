@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_filters %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">Create Requisition</h2>
+
+    <form method="post" action="{% url 'purchase:create_requisition' %}" novalidate class="space-y-6 bg-white shadow-md rounded-lg p-6">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <!-- Requisition Main Fields -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block mb-1 font-medium text-gray-700">{{ form.requisition_date.label_tag }}</label>
+                {{ form.requisition_date|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" }}
+                <p class="text-sm text-red-600 mt-1">{{ form.requisition_date.errors }}</p>
+            </div>
+
+            <div>
+                <label class="block mb-1 font-medium text-gray-700">{{ form.expected_date.label_tag }}</label>
+                {{ form.expected_date|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" }}
+                <p class="text-sm text-red-600 mt-1">{{ form.expected_date.errors }}</p>
+            </div>
+
+            <div>
+                <label class="block mb-1 font-medium text-gray-700">{{ form.priority.label_tag }}</label>
+                {{ form.priority|add_class:"w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" }}
+                <p class="text-sm text-red-600 mt-1">{{ form.priority.errors }}</p>
+            </div>
+        </div>
+
+        <!-- Requisition Items Section -->
+        <h3 class="text-xl font-semibold mt-8 mb-4 text-gray-800">Requisition Items</h3>
+
+        {{ formset.management_form }}
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full border border-gray-300 rounded-lg" id="item-table">
+    <thead class="bg-gray-100">
+        <tr>
+            <!-- Item Name: a bit smaller width -->
+            <th class="border px-3 py-2 text-left text-sm font-medium text-gray-700 w-1/4">Item Name</th>
+
+            <!-- Quantity: smaller -->
+            <th class="border px-3 py-2 text-left text-sm font-medium text-gray-700 w-1/12">Qty</th>
+
+            <!-- Unit: smaller -->
+            <th class="border px-3 py-2 text-left text-sm font-medium text-gray-700 w-1/12">Unit</th>
+
+            <!-- Note: width like item name, with height adjusted -->
+            <th class="border px-3 py-2 text-left text-sm font-medium text-gray-700 w-1/4">Note</th>
+
+            <th class="border px-3 py-2 text-center text-sm font-medium text-gray-700 w-1/6">Actions</th>
+        </tr>
+    </thead>
+    <tbody id="formset-container">
+        {% for form in formset.forms %}
+
+            <tr class="item-form bg-white hover:bg-gray-50">
+                <!-- Item Name input -->
+                <td class="border px-2 py-1 align-middle">
+                    {% render_field form.item_name class="item-select w-full border border-gray-300 rounded px-2 py-1 text-sm" %}
+                </td>
+
+                <!-- Quantity input -->
+                <td class="border px-2 py-1 align-middle">
+                    {% render_field form.quantity class="w-full border border-gray-300 rounded px-2 py-1 text-center text-sm" %}
+                </td>
+
+                <!-- Unit input (readonly with background) -->
+                <td class="border px-2 py-1 align-middle">
+                    {% render_field form.unit class="unit-input w-full border border-gray-300 rounded px-2 py-1 text-center bg-gray-50 text-sm" %}
+                </td>
+
+                <!-- Note input with similar width & height like item name -->
+                <td class="border px-2 py-1 align-middle">
+                    {% render_field form.note class="w-full border border-gray-300 rounded px-2 py-1 text-sm resize-none" style="min-height: 38px;" %}
+                </td>
+
+                <td class="border px-2 py-1 text-center align-middle">
+                    {% if forloop.first %}
+                        <button type="button" id="add-item" class="text-green-600 hover:text-green-800 font-semibold text-sm focus:outline-none">
+                            Add Item
+                        </button>
+                    {% else %}
+                        <button type="button" class="remove-item text-red-600 hover:text-red-800 font-semibold text-sm focus:outline-none">
+                            Delete
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+        </div>
+
+        <div class="pt-4">
+            <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-green-500">
+                Submit
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const addBtn = document.getElementById("add-item");
+    const formsetContainer = document.getElementById("formset-container");
+    let formIdx = {{ formset.total_form_count }};
+
+    function attachUnitLogic(context = document) {
+        context.querySelectorAll(".item-select").forEach(select => {
+            const unitMap = JSON.parse(select.getAttribute("data-units") || "{}");
+            const unitInput = select.closest("tr").querySelector(".unit-input");
+
+            select.addEventListener("change", function () {
+                const selectedId = this.value;
+                if (unitInput) {
+                    unitInput.value = unitMap[selectedId] || "";
+                }
+            });
+
+            // Initialize unit on page load
+            const selectedId = select.value;
+            if (unitInput) {
+                unitInput.value = unitMap[selectedId] || "";
+            }
+        });
+    }
+
+    function attachDeleteLogic() {
+        formsetContainer.querySelectorAll(".remove-item").forEach(btn => {
+            btn.addEventListener("click", function () {
+                btn.closest("tr").remove();
+                updateTotalForms();
+            });
+        });
+    }
+
+    function updateTotalForms() {
+        const totalFormsInput = document.getElementById("id_items-TOTAL_FORMS");
+        const currentCount = formsetContainer.querySelectorAll("tr.item-form").length;
+        totalFormsInput.value = currentCount;
+        formIdx = currentCount;
+    }
+
+    attachUnitLogic();
+    attachDeleteLogic();
+
+    addBtn?.addEventListener("click", () => {
+        const emptyFormHtml = `{{ formset.empty_form.as_table|escapejs }}`;
+        const tempDiv = document.createElement("tbody");
+        tempDiv.innerHTML = emptyFormHtml.replace(/__prefix__/g, formIdx);
+
+        const newRow = document.createElement("tr");
+        newRow.classList.add("item-form");
+
+        const tds = tempDiv.querySelectorAll("td");
+        tds.forEach(td => {
+            td.classList.add("border", "px-2", "py-1");
+            newRow.appendChild(td);
+        });
+
+        const actionCell = document.createElement("td");
+        actionCell.className = "border px-2 py-1 text-center";
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "remove-item text-red-600 hover:text-red-800 font-semibold text-sm focus:outline-none";
+        delBtn.textContent = "Delete";
+
+        actionCell.appendChild(delBtn);
+        newRow.appendChild(actionCell);
+
+        formsetContainer.appendChild(newRow);
+
+        attachUnitLogic(newRow);
+        attachDeleteLogic();
+
+        formIdx++;
+        updateTotalForms();
+    });
+
+    // Make sure TOTAL_FORMS updated on submit
+    document.querySelector('form').addEventListener('submit', function () {
+        updateTotalForms();
+    });
+});
+</script>
+{% endblock %}

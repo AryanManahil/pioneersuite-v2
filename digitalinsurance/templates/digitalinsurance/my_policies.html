@@ -1,0 +1,38 @@
+{% extends "digitalbase.html" %}
+{% block content %}
+<div class="max-w-5xl mx-auto mt-12 bg-white shadow p-6 rounded-xl text-sm">
+  <h2 class="text-2xl font-bold text-blue-700 mb-6">My Policies</h2>
+
+  {% if policies %}
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-gray-100 text-sm uppercase text-gray-600">
+          <th class="p-2">Policy #</th>
+          <th class="p-2">Product</th>
+          <th class="p-2">Start</th>
+          <th class="p-2">End</th>
+          <th class="p-2">Status</th>
+          <th class="p-2">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for policy in policies %}
+        <tr class="border-t text-sm">
+          <td class="p-2 font-medium">{{ policy.policy_number }}</td>
+          <td class="p-2">{{ policy.product.name }}</td>
+          <td class="p-2">{{ policy.start_date }}</td>
+          <td class="p-2">{{ policy.end_date }}</td>
+          <td class="p-2">{{ policy.status }}</td>
+          <td class="p-2">
+            <a href="{% url 'digitalinsurance:policy_detail' policy.id %}"
+               class="text-blue-600 hover:underline">View</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>You don't have any active policies yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

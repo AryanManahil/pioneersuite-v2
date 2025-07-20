@@ -1,0 +1,63 @@
+{% extends "digitalbase.html" %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto mt-12 bg-white shadow p-6 rounded-xl text-sm">
+  <h2 class="text-2xl font-bold text-blue-700 mb-6">My Quotes</h2>
+
+  {% if quotes %}
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-gray-100 text-sm uppercase text-gray-600">
+          <th class="p-2">Quote #</th>
+          <th class="p-2">Product</th>
+          <th class="p-2">Premium</th>
+          <th class="p-2">Status</th>
+          <th class="p-2">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for quote in quotes %}
+        <tr class="border-t hover:bg-gray-50">
+          <td class="p-2 font-semibold">{{ quote.id }}</td>
+          <td class="p-2">{{ quote.product.name }}</td>
+          <td class="p-2">{{ quote.total_premium }} BDT</td>
+          <td class="p-2">
+            <span class="px-2 py-1 rounded-full
+              {% if quote.status == 'pending' %}
+                bg-yellow-100 text-yellow-700
+              {% else %}
+                bg-green-100 text-green-700
+              {% endif %}
+            ">
+              {{ quote.status|capfirst }}
+            </span>
+          </td>
+          <td class="p-2">
+            {% if quote.status == 'pending' %}
+              <a href="{% url 'digitalinsurance:initiate_sslcommerz_payment' quote.id %}"
+                 class="text-green-600 hover:underline font-semibold">
+                Buy Now
+              </a>
+            {% else %}
+              {% with policies_by_quote_id|get_item:quote.id as policy %}
+                {% if policy %}
+                  <a href="{% url 'digitalinsurance:policy_detail' policy.id %}"
+                     class="text-blue-600 hover:underline font-semibold">
+                    View Policy
+                  </a>
+                {% else %}
+                  <span class="text-gray-400">No Policy</span>
+                {% endif %}
+              {% endwith %}
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="text-gray-600">You have no quotes yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

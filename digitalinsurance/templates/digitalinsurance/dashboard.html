@@ -1,0 +1,57 @@
+{% extends 'digitalbase.html' %}
+
+{% block content %}
+<section class="max-w-5xl mx-auto mt-12 px-6">
+    <div class="bg-white p-8 rounded-2xl shadow-xl">
+        <h1 class="text-3xl font-bold text-blue-700 mb-6">
+            Welcome, {{ customer.user.first_name }} {{ customer.user.last_name }}!
+        </h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- KYC/Profile -->
+            <a href="{% url 'digitalinsurance:customer_profile_view' %}"
+               class="relative bg-blue-600 hover:bg-blue-700 text-white px-4 py-5 rounded-xl shadow text-center font-medium transition">
+                Submit / View Profile
+                {% if customer.status %}
+                <span class="absolute top-2 right-3 text-xs font-semibold rounded-full px-2 py-0.5
+      {% if customer.status == 'Approved' %}bg-green-100 text-green-800
+      {% elif customer.status == 'Rejected' %}bg-red-100 text-red-800
+      {% else %}bg-yellow-100 text-yellow-800{% endif %}">
+      {{ customer.status }}
+    </span>
+                {% endif %}
+            </a>
+
+            <!-- Products -->
+            <a href="{% url 'digitalinsurance:product_list' %}"
+               class="bg-green-600 hover:bg-green-700 text-white px-4 py-5 rounded-xl shadow text-center font-medium transition">
+                View Insurance Products
+            </a>
+
+            <!-- My Quotes -->
+            <a href="{% url 'digitalinsurance:my_quotes' %}"
+               class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-5 rounded-xl shadow text-center font-medium transition">
+                My Quotes
+            </a>
+
+            <!-- Policies -->
+            <a href="{% url 'digitalinsurance:my_policies' %}"
+               class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-5 rounded-xl shadow text-center font-medium transition">
+                My Policies
+            </a>
+
+            <!-- Payments -->
+            <a href="{% url 'digitalinsurance:my_payments' %}"
+               class="bg-pink-600 hover:bg-pink-700 text-white px-4 py-5 rounded-xl shadow text-center font-medium transition">
+                My Payments
+            </a>
+
+            <!-- Claims -->
+            <a href="{% url 'digitalinsurance:my_claims' %}"
+               class="bg-red-600 hover:bg-red-700 text-white px-4 py-5 rounded-xl shadow text-center font-medium transition">
+                My Claims
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

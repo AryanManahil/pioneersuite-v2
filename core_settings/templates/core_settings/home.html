@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Core Settings - PioneerSuite{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center p-10">
+    <div class="bg-white shadow-xl rounded-xl p-8 w-full max-w-4xl">
+        <h1 class="text-3xl font-bold text-center mb-8 text-blue-700">Core Settings</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <a href="{% url 'core_settings:company_list' %}" class="bg-green-500 text-white text-center py-4 px-6 rounded-lg hover:bg-green-600 transition">
+                Companies
+            </a>
+            <a href="{% url 'core_settings:branch_list' %}" class="bg-blue-500 text-white text-center py-4 px-6 rounded-lg hover:bg-blue-600 transition">
+                Branches
+            </a>
+            <a href="{% url 'core_settings:department_list' %}" class="bg-yellow-500 text-white text-center py-4 px-6 rounded-lg hover:bg-yellow-600 transition">
+                Departments
+            </a>
+            <a href="{% url 'core_settings:product_list' %}" class="bg-purple-500 text-white text-center py-4 px-6 rounded-lg hover:bg-purple-600 transition">
+                Products
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

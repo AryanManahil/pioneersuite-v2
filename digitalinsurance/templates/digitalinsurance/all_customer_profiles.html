@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto mt-12 p-6 bg-white rounded-xl shadow">
+  <h2 class="text-2xl font-bold text-blue-700 mb-6">All Customer Profiles</h2>
+
+  <table class="min-w-full border divide-y">
+    <thead>
+      <tr class="bg-gray-100 text-left text-sm text-gray-700">
+        <th class="py-2 px-4">Name</th>
+        <th class="py-2 px-4">Email</th>
+        <th class="py-2 px-4">Status</th>
+        <th class="py-2 px-4">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for profile in profiles %}
+      <tr class="border-b text-sm">
+        <td class="py-2 px-4">{{ profile.user.first_name }} {{ profile.user.last_name }}</td>
+        <td class="py-2 px-4">{{ profile.user.email }}</td>
+        <td class="py-2 px-4">{{ profile.status }}</td>
+        <td class="py-2 px-4">
+          <a href="{% url 'digitalinsurance:admin_customer_detail' profile.pk %}"
+             class="text-blue-600 hover:underline">View</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

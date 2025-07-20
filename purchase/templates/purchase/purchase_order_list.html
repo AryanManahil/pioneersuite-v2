@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Purchase Orders{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+
+    <!-- Page Header -->
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <!-- Icon -->
+            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 12h6m2 8H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v2"></path>
+            </svg>
+            Purchase Order List
+        </h1>
+        <a href="{% url 'purchase:purchase_requisition_list' %}"
+           class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded shadow transition">
+            New Order
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <form method="get" class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+            <!-- Vendor -->
+            <div class="col-span-2">
+                <label for="vendor" class="block text-sm font-medium text-gray-700 mb-1">Vendor</label>
+                <select name="vendor" id="vendor" class="w-full rounded-md border-gray-300 shadow-sm">
+                    <option value="">All Vendors</option>
+                    {% for v in vendors %}
+                        <option value="{{ v.id }}" {% if request.GET.vendor|stringformat:"s" == v.id|stringformat:"s" %}selected{% endif %}>{{ v.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Status -->
+            <div class="col-span-2">
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select name="status" id="status" class="w-full rounded-md border-gray-300 shadow-sm">
+                    <option value="">All Statuses</option>
+                    <option value="draft" {% if request.GET.status == "draft" %}selected{% endif %}>Draft</option>
+                    <option value="submitted" {% if request.GET.status == "submitted" %}selected{% endif %}>Submitted</option>
+                    <option value="approved" {% if request.GET.status == "approved" %}selected{% endif %}>Approved</option>
+                    <option value="rejected" {% if request.GET.status == "rejected" %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+
+            <!-- Filter Button -->
+            <div>
+                <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition">
+                    Apply Filter
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Purchase Order Table -->
+    {% if orders %}
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="min-w-full text-sm text-left table-auto">
+            <thead class="bg-indigo-200 text-gray-700 uppercase text-xs">
+                <tr>
+                    <th class="px-6 py-3">PO Number</th>
+                    <th class="px-6 py-3">Vendor</th>
+                    <th class="px-6 py-3">Requisition</th>
+                    <th class="px-6 py-3">Status</th>
+                    <th class="px-6 py-3">Created</th>
+                    <th class="px-6 py-3">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for order in orders %}
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 font-medium text-gray-900">{{ order.po_number }}</td>
+                    <td class="px-6 py-4">{{ order.vendor.name }}</td>
+                    <td class="px-6 py-4">{{ order.requisition.requisition_no }}</td>
+                    <td class="px-6 py-4">
+                        {% if order.status == "draft" %}
+                            <span class="px-2 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-full">Draft</span>
+                        {% elif order.status == "submitted" %}
+                            <span class="px-2 py-1 text-xs font-semibold text-blue-700 bg-blue-100 rounded-full">Submitted</span>
+                        {% elif order.status == "approved" %}
+                            <span class="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Approved</span>
+                        {% elif order.status == "rejected" %}
+                            <span class="px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4">{{ order.created_at|date:"d M Y" }}</td>
+                    <td class="px-6 py-4 space-x-1">
+                        <!-- View -->
+                        <a href="{% url 'purchase:purchase_order_details' order.id %}" class="text-blue-600 hover:underline font-medium">View</a>
+
+                        <!-- Submit -->
+                        {% if order.status == 'draft' %}
+                        <form method="post" action="{% url 'purchase:purchase_order_submit' order.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-yellow-600 hover:underline font-medium">Submit</button>
+                        </form>
+                        {% endif %}
+
+                        <!-- Approve / Reject -->
+                        {% if order.status == 'submitted' %}
+                        <form method="post" action="{% url 'purchase:purchase_order_approve' order.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-green-600 hover:underline font-medium">Approve</button>
+                        </form>
+                        <form method="post" action="{% url 'purchase:purchase_order_reject' order.id %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:underline font-medium">Reject</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-center">
+        <nav class="inline-flex space-x-1">
+            {% if orders.has_previous %}
+                <a href="?page={{ orders.previous_page_number }}{% if request.GET.vendor %}&vendor={{ request.GET.vendor }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+                   class="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100">Previous</a>
+            {% else %}
+                <span class="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-400">Previous</span>
+            {% endif %}
+
+            {% for num in orders.paginator.page_range %}
+                {% if orders.number == num %}
+                    <span class="px-4 py-2 border border-gray-300 rounded-md text-sm bg-blue-600 text-white">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}{% if request.GET.vendor %}&vendor={{ request.GET.vendor }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+                       class="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if orders.has_next %}
+                <a href="?page={{ orders.next_page_number }}{% if request.GET.vendor %}&vendor={{ request.GET.vendor }}{% endif %}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}"
+                   class="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100">Next</a>
+            {% else %}
+                <span class="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-400">Next</span>
+            {% endif %}
+        </nav>
+    </div>
+    {% else %}
+    <div class="mt-6 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded">
+        <p>No purchase orders found.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

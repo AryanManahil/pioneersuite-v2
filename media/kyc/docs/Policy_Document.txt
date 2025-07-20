@@ -1,0 +1,94 @@
+UNDERWRITING ➝ POLICY ➝ ISSUE
+                            ↓
+                   ENDORSE / CANCEL / EXTEND
+
+Underwriting evaluates and approves the risk.
+
+Policy is the contract created after underwriting.
+
+Issue is the official activation of the policy.
+
+Endorsement updates an existing policy.
+
+Cancel/Extend modifies the policy's coverage lifecycle.
+
+
+
+Here below my existing and running old software entry form,can you suggest me the perfect policy design for OMP(Oversise medical policy) 
+Policy:
+-------
+1.Last Policy No:
+2.Search:
+3.OMP type:Busines & Holiday Tour(short name B&H)
+	Corporate Frequent Travel(CFT)
+	Employement Travel(ESS)
+	Student Studies Travel(STU)
+
+4.Plan type:Plan_type OMP_Name
+	A	World-Wide Excluding USA/Canada & Schengen Countries
+	B	World-Wide Excluding USA/Canada & Schengen Countries
+
+5.Policy Condition:This Travel Insurance is only available to Bangladesh Citizens between 6 months and 79 years of age who are undertaking bonafide trips outside Bangladesh which will
+
+6.Policy No:
+7.New No:
+8.Issue Date:
+9.Category:
+10.Age:02/06/1961(63 years 07 months 05 days)
+11.Address:
+12.Contact No:
+13.Insured Occupation(Specify):CEO
+14.Passport No:
+15.Name of Usual Pysician and Contact No:
+16.Deductible:See Schedule of Benefits attached in the policy wording
+17.Amonut of Prmium(Standard):(Rate calculation table is
+Plan type:
+Days:
+Age:
+Premium:
+Plan:
+18.Add%:
+19.Net Premium:
+20.Vat%:
+21.Total:
+22.Date of Purchase:Date
+From date: To Date: Days:
+23.No of days coverd:
+24.First day of Insurance
+25.Coutry to ve visit
+26.Producer:(Emp Name,Branch)
+27.Inhouse Business
+28.MR No:
+29.MR Date:
+30.MOP:Cash
+31.Bank Name:
+32.Branch Name:
+33.Check No:
+34.Check Date:
+35.Name of employer:
+36.Narration:i) Electronics data endorsement B
+ii) War & Terrorism as per the exclusion clause.
+iii) Claims important information.
+iv) Professional Sports and Sports team of any sort are excluded,
+v) Warranted that if any alteration/ modification/ cancellation of this needed the insured must inform the PIONEER INSURANCE COMPANY LTD. in writing before his/her departure (data as mentioned in the policy) from Bangladesh.
+vi) Appication in respect of Children Aged 5 and under:- This Policy excludes cover for treatment relating to "Mumps, Chicken Pox, Measles, German Measles, Spina Bifida, Whooping- Cough, Diphtheria, Poliomyelities, Meninggitis and Scarlet Fever" and for consequences attributable thereto, accelerated thereby or arising there from.
+vii) Subject to Coronavirus Exclusion Clause attacted.
+
+Button:
+Add New
+Save 
+Edit
+Premium Bill (button if i open then show a bill document) 
+Save As
+Exit Preview
+
+another few information from my old software:
+Underwridter section:
+	Plicy(already provide info)
+	Endorsement:
+	1.Serach Policy No
+	2.Search Enforment No
+	3.New End No
+	4.Last end No
+	5.Endorsment No
+	6.Endorsment Date

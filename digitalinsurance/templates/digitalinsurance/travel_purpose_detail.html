@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
+  <h2 class="text-2xl font-bold text-blue-700 mb-6">Change travel purpose</h2>
+
+  <div class="mb-6 text-gray-700">
+    <p><strong>{{ plan.name }} - {{ purpose.purpose_type }}</strong></p>
+  </div>
+
+  <h3 class="text-xl font-semibold mb-2">History</h3>
+
+  <div class="mb-6">
+    <p><strong>Plan:</strong></p>
+    <p class="ml-4">01 - {{ plan.name }}</p>
+  </div>
+
+  <div>
+    <p><strong>Purpose type:</strong></p>
+    <p class="ml-4">{{ purpose.purpose_type }}</p>
+  </div>
+</div>
+{% endblock %}

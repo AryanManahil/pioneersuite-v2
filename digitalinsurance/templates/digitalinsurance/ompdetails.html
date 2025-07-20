@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}OMP Details - PioneerSuite{% endblock %}
+
+{% block content %}
+<section class="max-w-lg mx-auto mt-10">
+  <h2 class="text-2xl font-semibold mb-6 text-center">OMP - Business & Holiday Details</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-4">
+      <label class="block mb-1">Travel Country</label>
+      <input type="text" name="country" required class="w-full border rounded px-3 py-2">
+    </div>
+    <div class="mb-4">
+      <label class="block mb-1">Date of Birth</label>
+      <input type="date" name="dob" required class="w-full border rounded px-3 py-2">
+    </div>
+    <div class="mb-4">
+      <label class="block mb-1">Duration (days)</label>
+      <input type="number" name="duration" required class="w-full border rounded px-3 py-2">
+    </div>
+    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+      Submit
+    </button>
+  </form>
+</section>
+{% endblock %}

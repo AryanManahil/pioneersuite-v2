@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Pioneer Digital Insurance{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+<!-- Header -->
+<header class="bg-blue-500 text-white shadow">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center px-4 py-3">
+        <!-- Dashboard Button -->
+        <a href="{% url 'digitalinsurance:customer_dashboard' %}"
+           class="bg-white text-blue-600 px-4 py-2 rounded hover:bg-blue-100 font-semibold">
+            📊 Dashboard
+        </a>
+
+        <!-- Title -->
+        <h1 class="text-2xl font-bold tracking-wide">Pioneer Digital Insurance</h1>
+
+        <!-- User Info & Logout -->
+        {% if user.is_authenticated %}
+        <div class="text-sm space-x-4 flex flex-wrap items-center justify-end mt-2 sm:mt-0">
+            <span>📧 {{ user.email }}</span>
+            <span>🏢 {{ user.department.branch.name|default:"Branch Name" }}</span>
+            <span>🏬 {{ user.department.name|default:"Department Name" }}</span>
+            <form method="post" action="{% url 'logout' %}" class="inline-block">
+                {% load widget_tweaks %}
+                {% csrf_token %}
+                <button type="submit" class="flex items-center gap-1 bg-white text-red-600 px-3 py-1 rounded hover:bg-red-100 font-medium">
+                    <!-- SVG logout icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1m0-10v1m0 4v1" />
+                    </svg>
+                    Logout
+                </button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</header>
+
+<!-- Messages -->
+{% if messages %}
+<div class="max-w-7xl mx-auto px-6 py-4">
+    {% for message in messages %}
+    <div class="mb-4 px-4 py-3 rounded
+        {% if message.tags == 'error' %}
+            bg-red-100 border border-red-400 text-red-700
+        {% elif message.tags == 'success' %}
+            bg-green-100 border border-green-400 text-green-700
+        {% else %}
+            bg-blue-100 border border-blue-400 text-blue-700
+        {% endif %}" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Main Content -->
+<main class="flex-grow p-6 max-w-7xl mx-auto w-full">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<!-- Footer -->
+<footer class="bg-blue-500 text-white shadow mt-6">
+    <div class="max-w-7xl mx-auto px-4 py-3 text-center text-sm">
+        &copy; 2025 PioneerSuite. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Purchase Order #{{ purchase_order.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            margin: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .header h2 {
+            margin: 0;
+        }
+        .info-table, .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .info-table td {
+            padding: 5px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #333;
+            padding: 8px;
+            text-align: left;
+        }
+        .footer {
+            margin-top: 50px;
+            text-align: right;
+        }
+        .signature {
+            margin-top: 80px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>Pioneer Insurance Company Limited</h2>
+    <p><strong>Purchase Order</strong></p>
+</div>
+
+<table class="info-table">
+    <tr>
+        <td><strong>PO Number:</strong> {{ purchase_order.id }}</td>
+        <td><strong>Date:</strong> {{ purchase_order.date|date:"d M Y" }}</td>
+    </tr>
+    <tr>
+        <td><strong>Vendor:</strong> {{ purchase_order.vendor.name }}</td>
+        <td><strong>Requisition:</strong> #{{ purchase_order.requisition.id }}</td>
+    </tr>
+</table>
+
+<table class="items-table">
+    <thead>
+        <tr>
+            <th>SL</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Unit</th>
+            <th>Note</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in purchase_order.items.all %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ item.item_name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unit }}</td>
+            <td>{{ item.note }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="footer">
+    <p><strong>Total Items:</strong> {{ purchase_order.items.count }}</p>
+</div>
+
+<div class="signature">
+    <p>______________________________</p>
+    <p>Authorized Signature</p>
+</div>
+
+</body>
+</html>

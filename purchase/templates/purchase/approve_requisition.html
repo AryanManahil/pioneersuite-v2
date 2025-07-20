@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>Approve or Reject Requisition {{ requisition.requisition_no }}</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit" class="btn btn-success">Submit Decision</button>
+  </form>
+
+  <h3>Requisition Items:</h3>
+  <ul>
+    {% for item in items %}
+      <li>{{ item.item_name }} - {{ item.quantity }} {{ item.unit }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

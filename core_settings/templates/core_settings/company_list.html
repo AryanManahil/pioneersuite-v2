@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6 text-center">Company List</h1>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead class="bg-blue-200">
+                <tr>
+                    <th class="py-3 px-6 text-left font-semibold">Name</th>
+                    <th class="py-3 px-6 text-left font-semibold">Address</th>
+                    <th class="py-3 px-6 text-left font-semibold">Created At</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for company in companies %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-4 px-6 text-left">{{ company.name }}</td>
+                    <td class="py-4 px-6 text-left">{{ company.address }}</td>
+                    <td class="py-4 px-6 text-left">{{ company.created_at|date:"d M Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="py-4 px-6 text-center">No companies found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

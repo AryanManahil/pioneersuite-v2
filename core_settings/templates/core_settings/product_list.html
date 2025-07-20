@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6 text-center">Product List</h1>
+
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <thead class="bg-purple-300">
+                <tr>
+                    <th class="py-3 px-6 text-left font-semibold">Product Name</th>
+                    <th class="py-3 px-6 text-left font-semibold">Description</th>
+                    <th class="py-3 px-6 text-left font-semibold">Stock</th>
+                    <th class="py-3 px-6 text-left font-semibold">Created At</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for product in products %}
+                <tr class="{% cycle 'bg-white' 'bg-gray-100' %} hover:bg-gray-200">
+                    <td class="py-4 px-6 text-left">{{ product.name }}</td>
+                    <td class="py-4 px-6 text-left">{{ product.description }}</td>
+                    <td class="py-4 px-6 text-left">{{ product.stock }}</td>
+                    <td class="py-4 px-6 text-left">{{ product.created_at|date:"d M Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="py-4 px-6 text-center">No products found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

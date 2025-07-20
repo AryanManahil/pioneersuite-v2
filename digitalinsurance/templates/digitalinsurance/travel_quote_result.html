@@ -1,0 +1,67 @@
+{% extends "digitalbase.html" %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-12 p-8 bg-white rounded-2xl shadow-xl">
+  <h2 class="text-3xl font-bold text-green-700 mb-6">Your Travel Quote Summary</h2>
+
+  <div class="space-y-4 text-gray-800 text-sm">
+    <div class="flex justify-between">
+      <span class="font-medium">Travelling to:</span>
+      <span>{{ countries|join:", " }}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">Plan:</span>
+      <span>{{ plan_name }}{% if region %} ({{ region }}){% endif %}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">Currency:</span>
+      <span>{{ currency }}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">Age:</span>
+      <span>{{ age }} years</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">Coverage Period:</span>
+      <span>{{ coverage_period }}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">Net Premium:</span>
+      <span>{{ net_premium }} {{ currency }}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">VAT ({{ vat_rate }}%):</span>
+      <span>{{ vat }} {{ currency }}</span>
+    </div>
+
+    <div class="flex justify-between">
+      <span class="font-medium">Stamp Fee:</span>
+      <span>{{ stamp }} {{ currency }}</span>
+    </div>
+
+    <div class="flex justify-between border-t pt-4 mt-4 text-base">
+      <span class="font-bold text-gray-900">Total Gross Premium:</span>
+      <span class="font-bold text-green-700 text-lg">{{ gross_premium }} {{ currency }}</span>
+    </div>
+  </div>
+
+  <!-- ✅ Proceed to Buy button -->
+  <div class="mt-8 text-center">
+  {% if quote and quote.id %}
+   <a href="{% url 'digitalinsurance:initiate_sslcommerz_payment' quote.id %}"
+   class="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-xl transition">
+  Proceed to Pay with SSLCommerz
+</a>
+  {% else %}
+    <p class="text-red-600 mt-4">❗ Quote unavailable. Please try again.</p>
+  {% endif %}
+</div>
+
+</div>
+{% endblock %}
